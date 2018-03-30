@@ -1,14 +1,27 @@
-sudoku = [[8,0,0,0,0,0,0,0,0],
-          [0,0,3,6,0,0,0,0,0],
-          [0,7,0,0,9,0,2,0,0],
-          [0,5,0,0,0,7,0,0,0],
-          [0,0,0,0,4,5,7,0,0],
-          [0,0,0,1,0,0,0,3,0],
-          [0,0,1,0,0,0,0,6,8],
-          [0,0,8,5,0,0,0,1,0],
-          [0,9,0,0,0,0,4,0,0]]
+sudoku = [
+    [0, 0, 0, 2, 0, 0, 0, 0, 4],
+    [0, 6, 0, 0, 0, 9, 8, 0, 0],
+    [8, 0, 1, 0, 5, 0, 3, 0, 0],
+    [0, 7, 0, 6, 0, 1, 2, 0, 0],
+    [0, 0, 0, 0, 7, 0, 0, 0, 0],
+    [0, 0, 8, 9, 0, 3, 0, 6, 0],
+    [0, 0, 5, 0, 9, 0, 1, 0, 3],
+    [0, 0, 4, 3, 0, 0, 0, 9, 0],
+    [3, 0, 0, 0, 0, 8, 0, 0, 0],
+]
+
+# sudoku = [[8, 0, 0, 0, 0, 0, 0, 0, 0],
+#           [0, 0, 3, 6, 0, 0, 0, 0, 0],
+#           [0, 7, 0, 0, 9, 0, 2, 0, 0],
+#           [0, 5, 0, 0, 0, 7, 0, 0, 0],
+#           [0, 0, 0, 0, 4, 5, 7, 0, 0],
+#           [0, 0, 0, 1, 0, 0, 0, 3, 0],
+#           [0, 0, 1, 0, 0, 0, 0, 6, 8],
+#           [0, 0, 8, 5, 0, 0, 0, 1, 0],
+#           [0, 9, 0, 0, 0, 0, 4, 0, 0]]
 
 dancing_links = []
+
 
 def get_dancing_links():
     first_links = [0 for i in range(324)]
@@ -19,14 +32,14 @@ def get_dancing_links():
                 dancing_links[0][i * 9 + j] = 1
                 dancing_links[0][80 + i * 9 + sudoku[i][j]] = 1
                 dancing_links[0][161 + j * 9 + sudoku[i][j]] = 1
-                num_row = i / 3
-                num_col = j / 3
-                dancing_links[0][242 + (num_row * 3 + num_col) * 9 +sudoku[i][j]] = 1
+                num_row = i // 3
+                num_col = j // 3
+                dancing_links[0][242 + (num_row * 3 + num_col) * 9 + sudoku[i][j]] = 1
     for i in range(9):
         for j in range(9):
             if dancing_links[0][i * 9 + j] == 0:
-                num_row = i / 3
-                num_col = j / 3
+                num_row = i // 3
+                num_col = j // 3
                 for k in range(9):
                     if dancing_links[0][81 + i * 9 + k] == 0:
                         if dancing_links[0][162 + j * 9 + k] == 0:
@@ -37,6 +50,7 @@ def get_dancing_links():
                                 first_links[161 + j * 9 + k + 1] = 1
                                 first_links[242 + (num_row * 3 + num_col) * 9 + k + 1] = 1
                                 dancing_links.append(first_links)
+
 
 def use_dancing_links(num_node, aim_num):
     if num_node == aim_num:
@@ -62,10 +76,10 @@ def use_dancing_links(num_node, aim_num):
                             if dancing_links[k][aim_num] == 0:
                                 dancing_links[k][aim_num] = 1
                                 change_row_list.append(k)
-            if mark_succ == True:
+            if mark_succ:
                 mark_succ = use_dancing_links(num_node + 1, aim_num)
-                if mark_succ == True:
-                    position_x = change_col_list[0] / 9
+                if mark_succ:
+                    position_x = change_col_list[0] // 9
                     position_y = change_col_list[0] % 9
                     num = (change_col_list[1] - 81) - position_x * 9 + 1
                     sudoku[position_x][position_y] = num
@@ -79,7 +93,8 @@ def use_dancing_links(num_node, aim_num):
             dancing_links[i][aim_num] = 0
     return False
 
+
 get_dancing_links()
 mark_succ = use_dancing_links(0, 324)
 for i in range(len(sudoku)):
-    print sudoku[i]
+    print(sudoku[i])
